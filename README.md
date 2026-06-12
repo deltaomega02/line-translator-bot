@@ -1,5 +1,7 @@
 # LINE 한↔일 실시간 번역 + 한국어 튜터 봇
 
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white) ![Google Cloud](https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white) ![LINE](https://img.shields.io/badge/LINE-00C300?style=for-the-badge&logo=line&logoColor=white) ![Google Gemini](https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)
+
 LINE 대화방의 한국어↔일본어 메시지를 실시간으로 상호 번역하고, 한국어 학습자에게 교정 피드백을 주는 봇.
 일본인 파트너와의 대화라는 실제 문제를 해결하기 위해 만들었고, **GCP Cloud Functions 서버리스로 매일 운영 중**이다.
 Discord 상주 봇(WebSocket Gateway)으로 시작해 LINE으로 옮기며 서버리스로 재설계했다.
