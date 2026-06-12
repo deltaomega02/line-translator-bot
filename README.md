@@ -41,7 +41,7 @@ Discord 상주 봇(WebSocket Gateway)으로 시작해 LINE으로 옮기며 서�
 |---|---|
 | `LINE_CHANNEL_ACCESS_TOKEN` / `LINE_CHANNEL_SECRET` | LINE 채널 인증 |
 | `GEMINI_API_KEY` | Gemini API 키 |
-| `USER_ID_SIWOO` / `USER_ID_ERIKO` | 대화 참여자 LINE 사용자 ID |
+| `USER_ID_SELF` / `USER_ID_PARTNER` | 대화 참여자 LINE 사용자 ID |
 
 ## 배포
 

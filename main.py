@@ -14,8 +14,8 @@ LINE_CHANNEL_ACCESS_TOKEN = os.environ.get("LINE_CHANNEL_ACCESS_TOKEN", "")
 LINE_CHANNEL_SECRET = os.environ.get("LINE_CHANNEL_SECRET", "")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 
-USER_ID_SIWOO = os.environ.get("USER_ID_SIWOO", "" )
-USER_ID_ERIKO = os.environ.get("USER_ID_ERIKO", "")
+USER_ID_SELF = os.environ.get("USER_ID_SELF", "" )
+USER_ID_PARTNER = os.environ.get("USER_ID_PARTNER", "")
 
 # Gemini 3.5 Flash (2026-05-19 GA). 1M 컨텍스트, 3.1 Pro급 성능.
 MODEL_ID = "gemini-3.5-flash"
@@ -87,24 +87,24 @@ def detect_language(text: str) -> str:
     if has_ko:
         return "ko"
     if has_cjk:
-        return "ja"  # 에리코 전용 봇이므로 한자만 있으면 일본어로 판정
+        return "ja"  # 상대코 전용 봇이므로 한자만 있으면 일본어로 판정
     return "unknown"
 
 
 def get_prompt_and_label(sender_id: str, user_msg: str) -> tuple[str, str]:
     """발신자와 메시지 내용에 따라 적절한 프롬프트와 이름 라벨 반환"""
-    if sender_id == USER_ID_SIWOO:
+    if sender_id == USER_ID_SELF:
         lang = detect_language(user_msg)
         if lang == "unknown":
             return "", ""
         return PROMPT_KO_TO_JP, "👦 시우"
 
-    if sender_id == USER_ID_ERIKO:
+    if sender_id == USER_ID_PARTNER:
         lang = detect_language(user_msg)
         if lang == "ja":
-            return PROMPT_JP_TO_KO, "👩 에리"
+            return PROMPT_JP_TO_KO, "👩 상대"
         elif lang == "ko":
-            return PROMPT_ERIKO_KOREAN_FEEDBACK, "👩 에리"
+            return PROMPT_ERIKO_KOREAN_FEEDBACK, "👩 상대"
         return "", ""
 
     return "", ""
@@ -140,7 +140,7 @@ def handle_message(event):
         return
 
     # 미등록 사용자 무시
-    if sender_id not in (USER_ID_SIWOO, USER_ID_ERIKO):
+    if sender_id not in (USER_ID_SELF, USER_ID_PARTNER):
         return
 
     # =========================================================
@@ -155,7 +155,7 @@ def handle_message(event):
     if search_prefix:
         query = user_msg[len(search_prefix):].strip()
         if not query:
-            hint = "🔍 질문 내용을 입력해줘!\n예: !질문 오늘 서울 날씨" if sender_id == USER_ID_SIWOO \
+            hint = "🔍 질문 내용을 입력해줘!\n예: !질문 오늘 서울 날씨" if sender_id == USER_ID_SELF \
                 else "🔍 質問を入力してね!\n例: !질문 今日の東京の天気"
             line_bot_api.reply_message(
                 event.reply_token,
@@ -164,7 +164,7 @@ def handle_message(event):
             return
 
         search_instruction = "질문에 대해 검색 결과를 바탕으로 간결하고 정확하게 답변해. 한국어로 답변." \
-            if sender_id == USER_ID_SIWOO \
+            if sender_id == USER_ID_SELF \
             else "質問に対して検索結果をもとに簡潔かつ正確に答えてください。日本語で回答。"
 
         try:
@@ -187,7 +187,7 @@ def handle_message(event):
             )
         except Exception as e:
             print(f"[ERROR] search, sender={sender_id}, query={query[:50]}, err={e}")
-            err_msg = "검색 중 오류가 발생했어 😢" if sender_id == USER_ID_SIWOO \
+            err_msg = "검색 중 오류가 발생했어 😢" if sender_id == USER_ID_SELF \
                 else "検索中にエラーが発生しました 😢"
             line_bot_api.reply_message(
                 event.reply_token,
@@ -224,7 +224,7 @@ def handle_message(event):
         )
     except Exception as e:
         print(f"[ERROR] sender={sender_id}, msg={user_msg[:50]}, err={e}")
-        err_msg = "번역 오류가 발생했어 😢" if sender_id == USER_ID_SIWOO \
+        err_msg = "번역 오류가 발생했어 😢" if sender_id == USER_ID_SELF \
             else "翻訳エラーが発生しました 😢"
         try:
             line_bot_api.reply_message(
