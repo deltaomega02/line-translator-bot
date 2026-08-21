@@ -6,6 +6,8 @@ LINE 대화방의 한국어↔일본어 메시지를 실시간으로 상호 번�
 일본인 파트너와의 대화라는 실제 문제를 해결하기 위해 만들었고, **GCP Cloud Functions 서버리스로 매일 운영 중**이다.
 Discord 상주 봇(WebSocket Gateway)으로 시작해 LINE으로 옮기며 서버리스로 재설계했다.
 
+- 모델: `gemini-3.5-flash` (`main.py:21`)
+
 ## 기술 스택
 
 | 영역 | 기술 | 용도 |
@@ -44,6 +46,8 @@ Discord 상주 봇(WebSocket Gateway)으로 시작해 LINE으로 옮기며 서�
 | `USER_ID_SELF` / `USER_ID_PARTNER` | 대화 참여자 LINE 사용자 ID |
 
 ## 배포
+
+배포에 필요한 의존성은 `requirements.txt` 에 있다(Cloud Functions 가 이 파일을 보고 설치한다).
 
 ```bash
 gcloud functions deploy line-translator \
